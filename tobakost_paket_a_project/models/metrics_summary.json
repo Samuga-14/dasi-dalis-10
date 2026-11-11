@@ -1,0 +1,26 @@
+{
+  "Linear Regression (Baseline)": {
+    "MAE": 32451.0,
+    "RMSE": 40185.0,
+    "MAPE": 4.27,
+    "R2": 0.934
+  },
+  "Ridge Regression (L2 Tuned)": {
+    "MAE": 32401.0,
+    "RMSE": 40241.0,
+    "MAPE": 4.25,
+    "R2": 0.9338
+  },
+  "Random Forest Regressor (Tuned)": {
+    "MAE": 40920.0,
+    "RMSE": 51900.0,
+    "MAPE": 5.61,
+    "R2": 0.8899
+  },
+  "Gradient Boosting / XGBoost (Tuned)": {
+    "MAE": 33918.0,
+    "RMSE": 44368.0,
+    "MAPE": 4.53,
+    "R2": 0.9196
+  }
+}
