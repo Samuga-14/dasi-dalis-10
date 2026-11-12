@@ -1,0 +1,181 @@
+:root { color-scheme: light; --page: #f8fafc; --surface: #fff; --primary: #2563eb; --teal: #0f766e; --accent: #8b5cf6; --ink: #0f172a; --muted: #64748b; --border: #e2e8f0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .app-sidebar { width: 252px; min-width: 252px; background: #fff; border-right: 1px solid var(--border); transition: width .2s ease, min-width .2s ease, transform .2s ease; z-index: 40; }
+    .sidebar-btn { width: 100%; min-height: 39px; display: flex; align-items: center; gap: 10px; text-align: left; padding: 8px 10px; border-radius: 8px; font-size: .79rem; line-height: 1.35; color: #475569; transition: background .15s, color .15s; border: 0; }
+    .sidebar-btn:hover { background: #f1f5f9; color: var(--ink); }
+    .sidebar-btn.active { background: #eff6ff; color: var(--primary); font-weight: 650; }
+    .nav-icon { width: 22px; min-width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; background: #f1f5f9; color: #64748b; }
+    .nav-icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .sidebar-btn.active .nav-icon { background: #dbeafe; color: var(--primary); }
+    .nav-group-label { padding: 0 10px; margin: 18px 0 6px; color: #94a3b8; font-size: .64rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .card-dark { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; box-shadow: 0 1px 2px rgb(15 23 42 / 4%); }
+    .kpi-card { position: relative; min-width: 0; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: 0 1px 2px rgb(15 23 42 / 4%); }
+    .kpi-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; border-radius: 14px 0 0 14px; background: var(--primary); }
+    .input-dark { background: #fff; border: 1px solid #cbd5e1; color: var(--ink); border-radius: 8px; padding: 9px 11px; width: 100%; min-height: 38px; font-size: .84rem; }
+    .input-dark:focus { outline: 3px solid rgb(37 99 235 / 14%); border-color: var(--primary); }
+    main { min-width: 0; }
+    .tab-section > div:first-child { padding: 4px 0 2px; }
+    .tab-section h2 { color: var(--ink) !important; font-size: clamp(1.35rem, 2vw, 1.8rem); line-height: 1.25; letter-spacing: -.025em; }
+    .tab-section h3 { color: #1e293b !important; }
+    .text-white { color: var(--ink) !important; }
+    .text-slate-200, .text-slate-300, .text-slate-400 { color: var(--muted) !important; }
+    .text-slate-500 { color: #94a3b8 !important; }
+    .text-blue-400, .text-blue-300 { color: var(--primary) !important; }
+    .text-emerald-400 { color: var(--teal) !important; }
+    .text-rose-400 { color: #dc2626 !important; }
+    .bg-blue-600.text-white, .bg-emerald-600.text-white, .bg-rose-600.text-white { color: #fff !important; }
+    .bg-blue-600.text-white:hover, .bg-emerald-600.text-white:hover { color: #fff !important; }
+    .bg-slate-900, .bg-slate-800, .bg-slate-950 { background: #f8fafc !important; }
+    .border-slate-800, .border-slate-700 { border-color: var(--border) !important; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: .83rem; }
+    th { position: sticky; top: 0; z-index: 1; background: #f8fafc; color: #475569; text-align: left; padding: 12px 14px; font-weight: 650; white-space: nowrap; border-bottom: 1px solid var(--border); cursor: pointer; }
+    th:hover { color: var(--primary); }
+    td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; color: #475569; vertical-align: middle; }
+    tbody tr:hover td { background: #f8fafc; }
+    .table-toolbar, .table-pager { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; color: var(--muted); font-size: .78rem; }
+    .table-toolbar { margin: 0 0 12px; }
+    .table-pager { margin-top: 12px; }
+    .table-toolbar input, .table-toolbar select, .table-pager button, .filter-reset, .mobile-menu-btn, .collapse-btn { border: 1px solid var(--border); background: #fff; color: #334155; border-radius: 8px; padding: 7px 10px; }
+    .table-toolbar input { width: min(250px, 100%); }
+    .table-pager button { cursor: pointer; }
+    .table-pager button:disabled { opacity: .45; cursor: not-allowed; }
+    .filter-reset { color: var(--primary); font-size: .77rem; font-weight: 600; cursor: pointer; }
+    .mobile-menu-btn, .sidebar-backdrop { display: none; }
+    .plot-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+    .plot-card-header h3 { margin: 0; line-height: 1.5; }
+    .plot-download { flex: 0 0 auto; border: 1px solid var(--border); background: #fff; color: #475569; border-radius: 7px; padding: 5px 8px; font-size: .7rem; font-weight: 600; cursor: pointer; }
+    .plot-download:hover { border-color: #93c5fd; color: var(--primary); background: #f8fafc; }
+    .metric-icon { width: 30px; height: 30px; display: grid; place-items: center; margin-bottom: 10px; border-radius: 8px; color: var(--primary); background: #eff6ff; }
+    .metric-icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .sidebar-collapsed .app-sidebar { width: 76px; min-width: 76px; }
+    .sidebar-collapsed .brand-copy, .sidebar-collapsed .nav-group-label, .sidebar-collapsed .nav-label, .sidebar-collapsed .sidebar-filter, .sidebar-collapsed .sidebar-footer { display: none; }
+    .sidebar-collapsed .sidebar-btn { justify-content: center; padding: 8px 4px; }
+    .sidebar-collapsed .nav-icon { width: 30px; height: 30px; }
+    #mapSpasial { height: 440px; width: 100%; border-radius: 10px; z-index: 10; }
+        .map-legend-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px; padding: 9px 12px; margin-bottom: 10px; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; font-size: .74rem; color: var(--muted); }
+    .map-legend-items { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; font-size: .74rem; color: var(--muted); }
+    .map-legend-title { font-weight: 700; color: var(--ink); }
+    .map-legend-item { display: inline-flex; align-items: center; gap: 6px; color: #334155; font-weight: 500; }
+    .map-legend-item i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex: 0 0 auto; }
+    .map-legend-item i.dot { border-radius: 50%; border: 1.5px solid #fff; box-shadow: 0 0 0 1px #94a3b8; }
+    .map-control label { display: block; margin-bottom: 4px; font-size: .7rem; font-weight: 600; color: var(--muted); }
+    .leaflet-tooltip.wilayah-label { background: rgba(15, 23, 42, .88); border: 0; border-radius: 6px; color: #fff; font-size: 11px; font-weight: 600; line-height: 1.3; padding: 4px 8px; text-align: center; box-shadow: 0 2px 6px rgb(15 23 42 / 30%); }
+    .leaflet-tooltip.wilayah-label b { display: block; font-size: 11.5px; }
+    .leaflet-tooltip.wilayah-label::before { display: none; }
+    .plot-box { width: 100%; min-height: 340px; }
+    .js-plotly-plot { min-width: 0; }
+    @media (max-width: 900px) {
+      .app-sidebar { position: fixed; inset: 0 auto 0 0; width: min(290px, 86vw); min-width: 0; transform: translateX(-105%); box-shadow: 14px 0 40px rgb(15 23 42 / 12%); }
+      .mobile-sidebar-open .app-sidebar { transform: translateX(0); }
+      .sidebar-collapsed .app-sidebar { width: min(290px, 86vw); min-width: 0; }
+      .sidebar-collapsed .brand-copy, .sidebar-collapsed .nav-group-label, .sidebar-collapsed .nav-label, .sidebar-collapsed .sidebar-filter, .sidebar-collapsed .sidebar-footer { display: initial; }
+      .sidebar-collapsed .sidebar-btn { justify-content: flex-start; padding: 8px 10px; }
+      .mobile-sidebar-open .sidebar-backdrop { display: block; position: fixed; inset: 0; z-index: 35; background: rgb(15 23 42 / 35%); }
+      .mobile-menu-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; min-height: 40px; }
+      .collapse-btn { display: none; }
+      main { padding: 16px !important; }
+    }
+    @media (max-width: 640px) {
+      .card-dark { padding: 15px; border-radius: 12px; }
+      .kpi-card { padding: 15px; }
+      .plot-box { min-height: 290px; }
+      #mapSpasial { height: 340px; }
+      .table-toolbar input { width: 100%; }
+    }
+        /* ===== POLISH TAMPILAN: hierarki, konteks KPI, keterbacaan, sidebar ===== */
+    :root { --page: #f1f5f9; --muted: #55637a; }
+    body { background: var(--page); }
+    .card-dark, .kpi-card { box-shadow: 0 1px 3px rgb(15 23 42 / 8%), 0 1px 2px rgb(15 23 42 / 4%); }
+
+    /* Keterbacaan teks kecil & kontras */
+    body .text-xs { font-size: .8rem; line-height: 1.25rem; }
+    .text-slate-500 { color: #64748b !important; }
+    #apiBadge { font-size: .72rem !important; }
+    .sidebar-footer { font-size: .76rem !important; }
+    .metric-icon { width: 40px; height: 40px; border-radius: 10px; margin-bottom: 14px; }
+    .metric-icon svg { width: 21px; height: 21px; }
+
+    /* KPI */
+    .kpi-card { padding: 20px 20px 18px; }
+    .kpi-card .kpi-label { font-size: .82rem; font-weight: 600; color: var(--muted); }
+    .kpi-card .kpi-value { margin-top: 4px; font-size: 1.75rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; color: var(--ink); }
+    .kpi-card .kpi-ctx { margin-top: 10px; font-size: .8rem; line-height: 1.55; color: var(--muted); }
+    .kpi-card .kpi-ctx strong { color: var(--ink); font-weight: 700; }
+    .kpi-chip { display: inline-flex; align-items: center; gap: 4px; margin: 0 4px 4px 0; padding: 3px 9px; border-radius: 999px; font-size: .76rem; font-weight: 700; line-height: 1.3; }
+    .kpi-chip.up { background: #fef3c7; color: #92400e; }
+    .kpi-chip.down { background: #dcfce7; color: #166534; }
+    .kpi-chip.flat { background: #e2e8f0; color: #334155; }
+    .kpi-hero { background: linear-gradient(135deg, #1e40af 0%, #2563eb 55%, #3b82f6 100%); border-color: transparent; }
+    .kpi-hero::before { display: none; }
+    .kpi-hero .kpi-label, .kpi-hero .kpi-ctx { color: rgb(255 255 255 / 88%); }
+    .kpi-hero .kpi-value { color: #fff; font-size: 2.5rem; }
+    .kpi-hero .metric-icon { background: rgb(255 255 255 / 18%); color: #fff; }
+    .kpi-hero .kpi-chip { background: rgb(255 255 255 / 20%); color: #fff; }
+
+    /* Kartu insight */
+    .insight-card { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 18px 16px 15px; }
+    .insight-card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--tone, var(--primary)); }
+    .insight-card .insight-tag { color: var(--tone, var(--primary)); font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .insight-card p { margin-top: 8px; font-size: .93rem; line-height: 1.6; color: #334155; }
+    .insight-card strong { color: var(--ink); font-weight: 700; }
+    .insight-card .insight-n { color: var(--muted); }
+    .insight-card.amber { --tone: #d97706; }
+    .insight-card.emerald { --tone: #059669; }
+    .insight-card.violet { --tone: #7c3aed; }
+    .insight-card.slate { --tone: #475569; }
+
+    /* Sidebar */
+    @media (min-width: 901px) { .app-sidebar { width: 276px; min-width: 276px; } }
+    .nav-icon { width: 28px; min-width: 28px; height: 28px; border-radius: 8px; }
+    .nav-icon svg { width: 18px; height: 18px; }
+    .sidebar-btn { min-height: 42px; font-size: .84rem; }
+    .sidebar-btn.active { box-shadow: inset 3px 0 0 var(--primary); }
+    nav#navMenu .nav-group-label { margin: 22px 0 8px !important; padding: 16px 10px 0 !important; border-top: 1px solid var(--border); color: #64748b; font-size: .68rem; }
+    nav#navMenu .nav-group-label:first-child { margin-top: 2px !important; padding-top: 0 !important; border-top: 0; }
+    .app-sidebar .sidebar-filter { margin-top: 22px; padding: 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; }
+    .sidebar-filter .input-dark { padding-right: 26px; text-overflow: ellipsis; }
+    
+    /* ===== TAHAP 2: sidebar lebih besar + kartu timbul & judul berwarna (satu irama biru) ===== */
+
+    /* --- Sidebar --- */
+    @media (min-width: 901px) { .app-sidebar { width: 300px; min-width: 300px; } }
+    .brand-copy h1 { font-size: 1.22rem; }
+    .brand-copy p { font-size: .9rem; }
+    #apiBadge { font-size: .8rem !important; padding: 5px 12px; }
+    nav#navMenu .nav-group-label { font-size: .76rem; letter-spacing: .1em; color: #475569; }
+    .sidebar-btn { min-height: 46px; gap: 12px; padding: 9px 12px; font-size: .96rem; }
+    .sidebar-btn:hover { transform: translateX(2px); }
+    .sidebar-btn.active { font-weight: 700; }
+    .nav-icon { width: 32px; min-width: 32px; height: 32px; border-radius: 9px; }
+    .nav-icon svg { width: 19px; height: 19px; }
+    .app-sidebar .sidebar-filter > div:first-child { color: #1e40af; font-size: .8rem; }
+    .app-sidebar .sidebar-filter label { margin-bottom: 6px; font-size: .88rem; font-weight: 600; color: #334155; }
+    .sidebar-filter .input-dark { min-height: 42px; font-size: .92rem; }
+    .sidebar-filter .filter-reset { font-size: .85rem; }
+    .sidebar-footer { font-size: .82rem !important; }
+
+    /* --- Judul halaman --- */
+    .tab-section h2 { color: #1e3a8a !important; font-weight: 800; }
+    .tab-section h2::after { content: ""; display: block; width: 56px; height: 4px; margin-top: 10px; border-radius: 4px; background: linear-gradient(90deg, #2563eb, #60a5fa); }
+    .tab-section > div:first-child > p { font-size: .95rem; color: var(--muted); }
+
+    /* --- Kartu timbul --- */
+    .tab-section .card-dark {
+      background: #fff;
+      border: 1px solid #dbe4f3;
+      border-top: 3px solid #2563eb;
+      border-radius: 16px;
+      box-shadow: 0 2px 4px rgb(15 23 42 / 5%), 0 12px 28px -12px rgb(30 64 175 / 22%);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .tab-section .card-dark:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgb(15 23 42 / 6%), 0 18px 36px -12px rgb(30 64 175 / 30%);
+    }
+    .tab-section .card-dark:has(#mapSpasial):hover { transform: none; }
+
+    /* --- Judul kartu: biru + garis aksen --- */
+    .tab-section .card-dark h3 { display: flex; align-items: stretch; gap: 10px; color: #1e40af !important; font-weight: 700; letter-spacing: -.01em; }
+    .tab-section .card-dark h3::before { content: ""; flex: 0 0 auto; width: 4px; border-radius: 4px; background: linear-gradient(180deg, #2563eb, #60a5fa); }
+  

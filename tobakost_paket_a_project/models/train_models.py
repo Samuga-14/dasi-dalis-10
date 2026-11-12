@@ -24,6 +24,7 @@ else:
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = os.path.join(BASE_DIR, "data", "tobakost_warehouse.db")
 MODEL_DIR = os.path.join(BASE_DIR, "models")
+REGISTRY_DIR = os.path.join(MODEL_DIR, "registry")
 
 def load_data_from_dw():
     with sqlite3.connect(DB_PATH) as conn:
@@ -80,8 +81,25 @@ def train_and_save():
     os.makedirs(MODEL_DIR, exist_ok=True)
     outputs = [
         (os.path.join(MODEL_DIR, "best_rf_model.pkl"), "wb", lambda stream: pickle.dump(bundle, stream)),
-        (os.path.join(MODEL_DIR, "metrics_summary.json"), "w", lambda stream: json.dump(results, stream, indent=2))
+        (os.path.join(MODEL_DIR, "metrics_summary.json"), "w", lambda stream: json.dump(results, stream, indent=2)),
     ]
+    manifest = {
+        "format_version": bundle["format_version"],
+        "model_artifact": "models/best_rf_model.pkl",
+        "metrics_artifact": "models/metrics_summary.json",
+        "dataset_source": os.path.relpath(DB_PATH, BASE_DIR),
+        "features": FEATURE_COLS,
+        "best_algorithm": best_algorithm,
+        "sklearn_version": sklearn.__version__,
+    }
+    os.makedirs(REGISTRY_DIR, exist_ok=True)
+    outputs.append(
+        (
+            os.path.join(REGISTRY_DIR, "model_manifest.json"),
+            "w",
+            lambda stream: json.dump(manifest, stream, indent=2),
+        )
+    )
     for path, mode, writer in outputs:
         fd, temp_path = tempfile.mkstemp(prefix=".model-", suffix=".tmp", dir=MODEL_DIR)
         try:

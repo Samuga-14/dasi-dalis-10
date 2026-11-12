@@ -12,7 +12,12 @@ import pandas as pd
 import numpy as np
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-GFORM_CSV_PATH = os.path.join(BASE_DIR, "data", "dummy_data_gform_kos_toba_600.csv")
+RAW_DATA_DIR = os.path.join(BASE_DIR, "data", "raw")
+GFORM_CSV_PATH = os.getenv(
+    "TOBAKOST_SOURCE_CSV",
+    os.path.join(RAW_DATA_DIR, "kos_survey.csv"),
+)
+LEGACY_GFORM_CSV_PATH = os.path.join(BASE_DIR, "data", "dummy_data_gform_kos_toba_600.csv")
 FALLBACK_CSV_PATH = os.path.join(BASE_DIR, "data", "dummy_data_kost_toba_600.csv")
 DB_PATH = os.path.join(BASE_DIR, "data", "tobakost_warehouse.db")
 
@@ -26,7 +31,9 @@ def parse_tujuan_kampus(val):
     return s, 1.0, 1000
 
 def run_etl():
-    csv_path = GFORM_CSV_PATH if os.path.exists(GFORM_CSV_PATH) else FALLBACK_CSV_PATH
+    csv_path = GFORM_CSV_PATH
+    if not os.path.exists(csv_path):
+        csv_path = LEGACY_GFORM_CSV_PATH if os.path.exists(LEGACY_GFORM_CSV_PATH) else FALLBACK_CSV_PATH
     print("[1/4] EXTRACT: Membaca dataset Google Form dari:", csv_path)
     df_raw = pd.read_csv(csv_path)
     raw_count = len(df_raw)
