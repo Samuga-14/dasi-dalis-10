@@ -5,6 +5,11 @@ Judul: **Analisis Faktor Penentu Tarif dan Prediksi Harga Sewa Kos Menggunakan A
 
 ## Struktur Folder Proyek (Paket A Modular — Tanpa Streamlit)
 
+Repository ini juga menyediakan scaffold struktur akademik wajib pada folder `data/`, `etl/`,
+`warehouse/`, `notebooks/`, `models/`, `app/`, `paper/`, `reports/weekly/`, dan `docs/`.
+Implementasi prototype lama tetap dipertahankan sementara migrasi fisik ke `app/` dilakukan
+bertahap melalui Pull Request agar dashboard yang sedang dikembangkan tidak rusak.
+
 ```text
 tobakost_paket_a_project/
 ├── server.py                              # Launcher kompatibilitas
@@ -37,6 +42,12 @@ tobakost_paket_a_project/
     ├── best_rf_model.pkl                  # File model pre-trained siap pakai untuk inferensi cepat (<2 ms)
     └── metrics_summary.json               # Ringkasan metrik R2, MAE, RMSE, dan MAPE pada Test Set
 ```
+
+Dokumen koordinasi:
+
+- [TECH_STACK.md](./TECH_STACK.md) — keputusan teknologi dan pembagian kerja.
+- [WORKFLOW.md](./WORKFLOW.md) — alur dummy data sampai data riil.
+- [CONTRIBUTING.md](./CONTRIBUTING.md) — aturan branch, issue, Pull Request, dan review.
 
 ## Cara Menjalankan Aplikasi di Windows
 

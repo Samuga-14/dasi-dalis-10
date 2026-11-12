@@ -1,0 +1,14 @@
+erDiagram
+    DIM_LOKASI ||--o{ FACT_SEWA_KOS : contains
+    DIM_SPESIFIKASI_KAMAR ||--o{ FACT_SEWA_KOS : describes
+    DIM_FASILITAS_ATURAN ||--o{ FACT_SEWA_KOS : governs
+    DIM_KONTRAK_SEWA ||--o{ FACT_SEWA_KOS : prices
+    FACT_SEWA_KOS {
+        string id_kost PK
+        string id_lokasi FK
+        string id_spesifikasi FK
+        string id_aturan FK
+        string id_kontrak FK
+        integer harga_bulanan_norm
+        float indeks_aksesibilitas_lokasi
+    }
