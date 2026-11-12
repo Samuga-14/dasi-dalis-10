@@ -1,23 +1,116 @@
 # TobaKost Analytics & Machine Learning — Tech Stack
 
 Dokumen ini menjelaskan teknologi, arsitektur, alur data, dan pembagian tanggung jawab
-komponen pada proyek TobaKost.
+komponen pada proyek TobaKost. Struktur repository mengikuti format akademik yang diwajibkan
+dosen. Folder `app/` menjadi pusat aplikasi dashboard dan API, sedangkan ETL, warehouse,
+notebook, model, paper, laporan mingguan, dan dokumentasi dipisahkan sesuai siklus kerja data
+science.
 
-## 1. Ringkasan Arsitektur
+## 0. Keputusan Tech Stack
+
+| Lapisan | Pilihan | Alasan |
+|---|---|---|
+| Frontend | HTML5, CSS3, JavaScript ES6+ | Ringan, mudah dibagi per visualisasi, dan tidak menambah kompleksitas framework |
+| Chart | Plotly.js | Mendukung chart interaktif untuk analitik eksploratif |
+| Peta | Leaflet.js | Ringan dan sesuai untuk visualisasi lokasi kos |
+| Backend/API | Python + FastAPI | REST API bertipe jelas, dokumentasi OpenAPI otomatis, dan cocok dengan ETL/ML Python |
+| Validasi API | Pydantic | Memvalidasi request prediksi dan data listing sebelum diproses |
+| Database development | SQLite | Mudah dijalankan lokal dan cocok untuk data dummy/single-user |
+| Database production | PostgreSQL | Mendukung multi-user, transaksi, role, backup, dan deployment nyata |
+| Warehouse model | Star schema | Memisahkan fact dan dimension untuk kebutuhan analitik |
+| ETL | Python, pandas, NumPy | Konsisten dengan pipeline feature engineering dan model |
+| Machine learning | scikit-learn | Model regresi, evaluasi, dan preprocessing berada dalam ekosistem Python |
+| Notebook | Jupyter Notebook | EDA, baseline, dan eksperimen dapat direproduksi |
+| Dokumentasi | Markdown | Mudah direview melalui GitHub |
+| Version control | Git + GitHub | Kolaborasi, review, dan histori perubahan |
+
+### Keputusan backend
+
+Backend yang direkomendasikan untuk struktur final adalah **FastAPI**, bukan custom
+`http.server`. Custom server yang ada tetap dapat dipakai sebagai prototype lokal, tetapi FastAPI
+lebih tepat untuk koordinasi tim karena memiliki router, schema request/response, dependency
+injection, validasi Pydantic, dan OpenAPI/Swagger.
+
+Endpoint tetap dipisahkan berdasarkan domain:
+
+- `/api/analytics` untuk data agregasi dan visualisasi.
+- `/api/listings` untuk pencarian kos.
+- `/api/predictions` untuk inferensi model.
+- `/api/warehouse` untuk endpoint admin/inspeksi.
+- `/api/health` untuk readiness check.
+
+### Keputusan database
+
+Gunakan **SQLite untuk development dan demo** karena database dummy saat ini berbentuk file
+`data/tobakost_warehouse.db`. Gunakan **PostgreSQL untuk data riil atau multi-user**. Schema,
+repository, dan API harus dirancang agar perpindahan database tidak mengubah frontend.
+
+## 1. Struktur Repository Wajib
+
+Target struktur repository:
 
 ```text
-Browser
+da-ds-2026-kelompok-XX/
+├── README.md
+├── data/
+│   ├── sample/                         # Sampel kecil yang boleh di-commit
+│   └── README.md                       # Tautan data lengkap dan instruksi akses
+├── etl/                                # Extract-transform-load
+│   ├── extract.py
+│   ├── transform.py
+│   ├── validate.py
+│   └── load.py
+├── warehouse/                          # DDL, seed, dan ERD
+│   ├── ddl/
+│   ├── seeds/
+│   └── erd/
+├── notebooks/
+│   ├── 01_eda.ipynb
+│   ├── 02_baseline.ipynb
+│   └── 03_model_experiments.ipynb
+├── models/
+│   ├── artifacts/                      # .pkl/.joblib, jangan commit > 50 MB
+│   ├── model_card.md
+│   └── registry/
+├── app/
+│   ├── frontend/                       # HTML, CSS, JS, Plotly, Leaflet
+│   ├── api/                            # FastAPI routers dan schemas
+│   ├── services/                       # Analytics, prediction, recommendation
+│   └── main.py
+├── paper/
+│   ├── naskah-jurnal/
+│   └── jurnal-target.md
+├── reports/weekly/
+│   ├── minggu-01.md
+│   └── minggu-14.md
+└── docs/
+    ├── proposal/
+    ├── data-dictionary.md
+    └── data-quality-report.md
+```
+
+File data lengkap, database binary besar, dan artifact model di atas batas repository tidak
+boleh di-commit. Repository menyimpan sampel, schema, manifest, checksum, serta tautan sumber
+data lengkap.
+
+## 2. Ringkasan Arsitektur
+
+```text
+Browser (HTML + JavaScript + Plotly + Leaflet)
   |
-  | HTTP/JSON REST API
+  | HTTPS/JSON REST API
   v
-Python Backend
+FastAPI Backend
   |
-  +--> Analytics Service
-  +--> Machine Learning Service
-  +--> ETL Pipeline
-  +--> SQLite Star Schema Warehouse
+  +--> Analytics service
+  +--> Listing/search service
+  +--> Prediction service
+  +--> PostgreSQL/SQLite warehouse
   |
-  +--> Model Artifacts (.pkl + manifest)
+  +--> Versioned model artifacts
+
+ETL scripts --> staging --> warehouse
+Jupyter notebooks --> EDA/baseline/experiments --> models/registry
 ```
 
 Frontend tidak mengakses database secara langsung. Semua komunikasi data dilakukan melalui
@@ -53,17 +146,17 @@ visualisasi utama.
 | Komponen | Teknologi | Fungsi |
 |---|---|---|
 | Bahasa | Python 3 | Backend, ETL, dan machine learning |
-| HTTP server | Python `http.server` | Menyajikan frontend dan REST API |
+| HTTP server | FastAPI + Uvicorn | Menyajikan REST API dan OpenAPI |
 | Request format | JSON | Format request dan response API |
-| Routing | Custom HTTP handler | Routing endpoint `/api/...` |
+| Routing | FastAPI APIRouter | Routing endpoint berdasarkan domain |
+| Validation | Pydantic | Validasi payload dan response |
 | Configuration | `server_config.py` dan environment variable | Host, port, path, dan admin key |
 | Analytics boundary | `backend/services/analytics.py` | Akses terstandar ke service analitik |
 | Database boundary | `backend/db/warehouse.py` | Akses terstandar ke warehouse |
 | Entry point | `server.py` dan `backend/main.py` | Menjalankan aplikasi |
 
-Backend saat ini sengaja ringan dan tidak menggunakan framework web besar. Untuk deployment
-production, backend dapat dimigrasikan ke FastAPI atau Flask tanpa mengubah kontrak API secara
-signifikan.
+Backend prototype saat ini masih memiliki adapter custom. Target struktur final menggunakan
+FastAPI agar kontrak API, validasi, dan pembagian router lebih mudah dikelola tim.
 
 ## 4. REST API
 
@@ -119,6 +212,15 @@ Jika `TOBAKOST_ADMIN_API_KEY` belum diatur, operasi tulis dinonaktifkan secara d
 SQLite cocok untuk demo, pengembangan lokal, dan penggunaan single-user. Untuk production
 multi-user, database utama sebaiknya dipindahkan ke PostgreSQL.
 
+### Strategi migrasi database
+
+1. DDL star schema ditulis di `warehouse/ddl/`.
+2. ETL menulis ke staging terlebih dahulu.
+3. Data quality check dijalankan sebelum load ke fact/dimension.
+4. SQLite digunakan untuk test lokal.
+5. PostgreSQL digunakan sebagai target deployment data riil.
+6. API hanya berkomunikasi dengan repository/service, bukan SQL langsung dari frontend.
+
 ## 6. ETL dan Data Engineering
 
 | Tahap | Lokasi | Fungsi |
@@ -126,7 +228,7 @@ multi-user, database utama sebaiknya dipindahkan ke PostgreSQL.
 | Raw data | `data/raw/` | Menyimpan data asli tanpa ditimpa |
 | Staging | `data/staging/` | Area transformasi dan validasi sementara |
 | Warehouse | `data/warehouse/` | Lokasi warehouse untuk pengembangan deployment |
-| ETL script | `etl/run_etl_star_schema.py` | Extract, transform, dan load ke star schema |
+| ETL script | `etl/` | Extract, transform, validate, dan load ke star schema |
 | Data processing | pandas dan NumPy | Parsing, normalisasi, dan feature engineering |
 
 Sumber CSV dapat ditentukan melalui:
@@ -173,7 +275,20 @@ Training ulang:
 python models/train_models.py
 ```
 
-## 8. Role dan User
+## 8. Pembagian Kerja Lima Anggota
+
+| Anggota | Area | Deliverable utama |
+|---|---|---|
+| Anggota 1 | Data/ETL | `data/`, `etl/`, data quality, data dictionary |
+| Anggota 2 | Warehouse | `warehouse/`, DDL star schema, ERD, query mart |
+| Anggota 3 | EDA/ML | `notebooks/`, eksperimen, baseline, model card |
+| Anggota 4 | Visualisasi frontend | `app/frontend/`, lima section visualisasi, Leaflet/Plotly |
+| Anggota 5 | Backend/API/integrasi | `app/api/`, prediction service, auth, integrasi FE–BE |
+
+Pembagian ini tidak berarti setiap anggota hanya boleh menyentuh satu folder. Perubahan lintas
+folder harus didokumentasikan di pull request dan diuji melalui API atau notebook terkait.
+
+## 9. Role dan User
 
 Sistem tidak mengasumsikan jumlah user tertentu.
 
@@ -195,7 +310,7 @@ Role admin saat ini menggunakan API key sederhana untuk development. Untuk produ
 sebaiknya diganti dengan authentication dan authorization berbasis akun, session/JWT,
 password hashing, serta role-based access control.
 
-## 9. Dependency
+## 10. Dependency
 
 Dependency Python didefinisikan di [requirements.txt](./requirements.txt):
 
@@ -207,7 +322,7 @@ Library frontend seperti Tailwind CSS, Plotly.js, dan Leaflet.js saat ini dimuat
 Untuk production, dependency frontend sebaiknya dipin versinya dan dikelola melalui npm atau
 disimpan melalui asset bundler.
 
-## 10. Konfigurasi Runtime
+## 11. Konfigurasi Runtime
 
 | Variable | Default | Fungsi |
 |---|---|---|
@@ -224,7 +339,7 @@ $env:TOBAKOST_SOURCE_CSV = "D:\data-riil\survey-kos.csv"
 python server.py
 ```
 
-## 11. Rekomendasi untuk Production
+## 12. Rekomendasi untuk Production
 
 Jika proyek mulai memakai data riil atau diakses banyak pengguna, lakukan migrasi berikut:
 
@@ -242,7 +357,7 @@ Jika proyek mulai memakai data riil atau diakses banyak pengguna, lakukan migras
 12. Jangan memuat seluruh dataset ke browser jika jumlah data sudah besar; gunakan pagination
     dan endpoint agregasi.
 
-## 12. Cara Menjalankan
+## 13. Cara Menjalankan
 
 ```powershell
 cd "D:\DASI DALIS\dasi-dalis-10\tobakost_paket_a_project"
@@ -253,3 +368,16 @@ python server.py
 ```
 
 Buka `http://localhost:8000` setelah server aktif.
+
+## 14. Jawaban singkat untuk koordinasi tim
+
+Stack final yang dapat disampaikan ke tim:
+
+> **Frontend:** HTML5, CSS3, JavaScript ES6+, Plotly.js, dan Leaflet.js.
+> **Backend:** Python FastAPI dengan Uvicorn, Pydantic, dan REST API JSON.
+> **ETL:** Python, pandas, dan NumPy.
+> **Machine learning:** scikit-learn dengan notebook Jupyter untuk EDA, baseline, dan eksperimen.
+> **Database development:** SQLite.
+> **Database data riil/production:** PostgreSQL.
+> **Warehouse:** star schema dengan fact dan dimension tables.
+> **Dokumentasi/kolaborasi:** Markdown, Git, dan GitHub.
