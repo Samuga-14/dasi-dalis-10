@@ -1,17 +1,33 @@
 # Aturan Kontribusi Kelompok
 
-## Alur perubahan
+## Strategi branch
+
+Kelompok boleh mengerjakan semua bagian proyek dari branch anggota masing-masing. Branch tidak
+dibagi berdasarkan domain pekerjaan.
+
+```text
+main       # versi stabil dan checkpoint
+└── develop       # integrasi seluruh pekerjaan tim
+    ├── develop-1 # branch kerja anggota 1
+    ├── develop-2 # branch kerja anggota 2
+    ├── develop-3 # branch kerja anggota 3
+    ├── develop-4 # branch kerja anggota 4
+    └── develop-5 # branch kerja anggota 5
+```
+
+Alur perubahan:
 
 1. Buat issue untuk setiap tugas.
-2. Buat branch dari `main`, misalnya `feat/visualisasi-harga`.
+2. Kerjakan tugas pada `develop-<nomor>`.
 3. Gunakan Conventional Commit dan cantumkan nomor issue:
    `feat: tambah visualisasi distribusi harga (#12)`.
-4. Buka Pull Request yang menautkan issue.
+4. Buka Pull Request dari `develop-<nomor>` ke `develop`.
 5. Minta minimal satu review anggota lain.
-6. Merge hanya setelah checks dan approval selesai.
+6. Setelah stabil, buka Pull Request dari `develop` ke `main` untuk checkpoint atau rilis.
 
-Jangan push langsung ke `main`. Setiap anggota memakai akun GitHub sendiri agar kontribusi
-tercatat pada Contributors.
+Jangan push langsung ke `main` atau `develop`. Setiap anggota memakai akun GitHub sendiri agar
+kontribusi tercatat pada Contributors. Branch `team/*` yang lama dipertahankan sementara sebagai
+referensi dan dapat dihapus setelah tidak lagi digunakan.
 
 ## Area kerja
 
