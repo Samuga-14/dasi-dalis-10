@@ -134,6 +134,11 @@ def run_etl():
         df["dapur_pribadi"] * 0.5 +
         df["keamanan_penjaga"] * 0.5
     ).round(1)
+    df["jenis_kos"] = np.where(
+        df["skor_kelengkapan_fasilitas"] >= 7.0,
+        "eksekutif",
+        "ekonomi",
+    )
 
     df["indeks_aksesibilitas_lokasi"] = (
         (1.0 / (1.0 + df["jarak_ke_kampus_kantor_sekolah_terdekat_km"])) * 35 +
@@ -153,7 +158,8 @@ def run_etl():
     spek_cols = [
         "luas_kamar_m2", "jumlah_lantai", "tipe_kamar_mandi", "kelengkapan_kamar_mandi",
         "ac_non_ac", "fasilitas", "fasilitas_kamar_detail",
-        "ada_lemari", "ada_kasur", "ada_tv", "ada_meja_belajar", "kloset_duduk", "ada_shower", "ada_water_heater"
+        "ada_lemari", "ada_kasur", "ada_tv", "ada_meja_belajar", "kloset_duduk", "ada_shower",
+        "ada_water_heater", "jenis_kos"
     ]
     dim_spesifikasi = df[spek_cols].drop_duplicates().reset_index(drop=True)
     dim_spesifikasi["id_spesifikasi"] = [f"SPK_{i+1:03d}" for i in range(len(dim_spesifikasi))]
@@ -230,6 +236,7 @@ def run_etl():
         s.kloset_duduk,
         s.ada_shower,
         s.ada_water_heater,
+        s.jenis_kos,
         a.id_aturan,
         a.kategori_penghuni,
         a.sumber_air_utama,

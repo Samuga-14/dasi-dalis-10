@@ -229,6 +229,7 @@ let APP_PAYLOAD = {"status": "ok", "architecture": "Paket A: Python REST API + S
     function applyGlobalFilter() {
       const kec = document.getElementById('filterKecamatan').value;
       const kat = document.getElementById('filterKategori').value;
+      const jenisKos = document.getElementById('filterJenisKos').value;
       const per = document.getElementById('filterPeriode').value;
       const minPrice = Number(document.getElementById('filterHargaMin').value);
       const maxPrice = Number(document.getElementById('filterHargaMax').value);
@@ -237,6 +238,7 @@ let APP_PAYLOAD = {"status": "ok", "architecture": "Paket A: Python REST API + S
       FILTERED_RECORDS = ALL_RECORDS.filter(r => {
         if (kec !== 'ALL' && r.kecamatan !== kec) return false;
         if (kat !== 'ALL' && normalizeCategory(r.kategori_penghuni) !== kat) return false;
+        if (jenisKos !== 'ALL' && String(r.jenis_kos || '').toLowerCase() !== jenisKos) return false;
         if (per !== 'ALL' && r.sewa_tahunan_bulanan !== per) return false;
         if (document.getElementById('filterHargaMin').value !== '' && r.harga_bulanan_norm < minPrice) return false;
         if (document.getElementById('filterHargaMax').value !== '' && r.harga_bulanan_norm > maxPrice) return false;
@@ -264,6 +266,7 @@ let APP_PAYLOAD = {"status": "ok", "architecture": "Paket A: Python REST API + S
     function resetGlobalFilter() {
       document.getElementById('filterKecamatan').value = 'ALL';
       document.getElementById('filterKategori').value = 'ALL';
+      document.getElementById('filterJenisKos').value = 'ALL';
       document.getElementById('filterPeriode').value = 'ALL';
       document.getElementById('filterHargaMin').value = '';
       document.getElementById('filterHargaMax').value = '';
@@ -1135,6 +1138,7 @@ let APP_PAYLOAD = {"status": "ok", "architecture": "Paket A: Python REST API + S
           <td class="font-medium text-white">${r.nama_kost}</td>
           <td>${r.kecamatan} - ${r.desa_kelurahan}</td>
           <td>${r.kategori_penghuni}</td>
+          <td>${String(r.jenis_kos || '-').replace(/^./, c => c.toUpperCase())}</td>
           <td>${r.luas_kamar_m2} m2</td>
           <td>${r.tipe_kamar_mandi}</td>
           <td>${r.ac_non_ac.toUpperCase()} / ${r.wifi_non_wifi}</td>

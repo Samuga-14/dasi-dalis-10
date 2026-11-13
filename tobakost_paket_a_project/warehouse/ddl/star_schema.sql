@@ -17,7 +17,8 @@ CREATE TABLE dim_spesifikasi_kamar (
     kelengkapan_kamar_mandi TEXT,
     ac_non_ac TEXT,
     fasilitas TEXT,
-    fasilitas_kamar_detail TEXT
+    fasilitas_kamar_detail TEXT,
+    jenis_kos TEXT NOT NULL CHECK (jenis_kos IN ('ekonomi', 'eksekutif'))
 );
 
 CREATE TABLE dim_fasilitas_aturan (

@@ -76,6 +76,14 @@
           </select>
         </div>
         <div>
+          <label class="text-xs text-slate-300 block mb-1">Jenis Kos</label>
+          <select id="filterJenisKos" class="input-dark" onchange="applyGlobalFilter()">
+            <option value="ALL">Semua Jenis Kos</option>
+            <option value="ekonomi">Ekonomi</option>
+            <option value="eksekutif">Eksekutif</option>
+          </select>
+        </div>
+        <div>
           <label class="text-xs text-slate-300 block mb-1">Skema Periode Sewa</label>
           <select id="filterPeriode" class="input-dark" onchange="applyGlobalFilter()">
             <option value="ALL">Semua Periode (Bulanan & Tahunan)</option>
@@ -445,6 +453,7 @@
                 <th>Nama Kos</th>
                 <th>Kecamatan / Desa</th>
                 <th>Kategori</th>
+                <th>Jenis Kos</th>
                 <th>Luas</th>
                 <th>KM</th>
                 <th>AC / Wi-Fi</th>
