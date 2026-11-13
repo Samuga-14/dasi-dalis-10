@@ -26,8 +26,8 @@ Alur perubahan:
 6. Setelah stabil, buka Pull Request dari `develop` ke `main` untuk checkpoint atau rilis.
 
 Jangan push langsung ke `main` atau `develop`. Setiap anggota memakai akun GitHub sendiri agar
-kontribusi tercatat pada Contributors. Branch `team/*` yang lama dipertahankan sementara sebagai
-referensi dan dapat dihapus setelah tidak lagi digunakan.
+kontribusi tercatat pada Contributors. Branch kerja lama `team/*` sudah dihapus karena tidak
+memiliki commit unik.
 
 ## Area kerja
 
